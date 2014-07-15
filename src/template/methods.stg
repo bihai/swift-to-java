@@ -1,0 +1,24 @@
+import "type.stg"
+
+function_return(ret) ::= <%
+	<if(ret.noReturn)>void<else><type(first(ret.types))><endif>
+%>
+
+explode_param(parameter) ::= <%
+	final <type(parameter.type)> <parameter.name>
+%>
+
+explode_params(clauses) ::= <%
+	<if(clauses)>
+		<explode_param(first(first(clauses)))><rest(first(clauses)):{ param |, <explode_param(param)>}>
+		<rest(clauses) : {parameters | <parameters:{ param |, <explode_param(param)>}>}>
+	<endif>
+%>
+
+instance_method(method) ::= <<
+	public <function_return(method.functionReturn)> <method.name> (<explode_params(method.parameters)>) {
+		<method.statements:{statement | <statement>;
+		}>
+	}
+	
+>>

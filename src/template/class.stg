@@ -1,0 +1,35 @@
+import "includes.st"
+import "type.stg"
+import "util.stg"
+import "methods.stg"
+
+extends(parent) ::= "<if(parent)>extends <parent> <endif>"
+
+impl(protocols) ::= "<if(protocols)>implements <explode(protocols)> <endif>"
+
+
+static_state(variables) ::= <<
+>>
+
+
+static_behaviour(methods) ::= <<
+>>
+
+
+instance_state(variables) ::= <<
+>>
+
+instance_behaviour(methods) ::= <<
+<if(methods)><methods:instance_method()><endif>
+>>
+
+class(class) ::= <<
+<includes()>
+
+public class <class.name> <extends(class.parent)><impl(class.protocols)>{
+<instance_behaviour(class.instanceFunctions)>
+}
+>>
+
+
+

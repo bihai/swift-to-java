@@ -1,0 +1,15 @@
+typeTranslation ::= [
+        "Int8":"char",
+        "Int16":"short",
+        "Int32":"int",
+        "Int64":"long",
+        "Int":"int",
+        "Double":"double",
+        "Float":"float",
+        "Bool":"boolean",
+        default:key
+]
+
+type(type) ::= <%
+	<typeTranslation.(type)>
+%>

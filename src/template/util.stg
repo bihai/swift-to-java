@@ -1,0 +1,1 @@
+explode(list) ::= "<first(list)><if(rest(list))><rest(list):{item|, <item>}><endif>"
