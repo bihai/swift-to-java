@@ -7,6 +7,16 @@ typeTranslation ::= [
         "Double":"double",
         "Float":"float",
         "Bool":"boolean",
+
+		"View" : "android.view.View",
+		"Bundle":"android.os.Bundle",
+		"Button":"android.widget.Button",
+        "Activity": "android.app.Activity",
+		"EditText":"android.widget.EditText",
+		"LinearLayout":"android.widget.LinearLayout",
+		"OnClickListener": "android.view.View.OnClickListener",
+		"Editable" : "android.text.Editable",
+        
         default:key
 ]
 

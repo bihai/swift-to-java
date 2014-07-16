@@ -14,6 +14,6 @@ public class SwiftComplexData extends SwiftType {
 	public final ArrayList<String> protocols = new ArrayList<String>();
 	public final ArrayList<SwiftValueHolder> classState = new ArrayList<SwiftValueHolder>();
 	public final ArrayList<SwiftFunction> classFunctions = new ArrayList<SwiftFunction>();
-	public final ArrayList<SwiftValueHolder> instanceState = new ArrayList<SwiftValueHolder>();
+	public final ArrayList<SwiftExpression> instanceState = new ArrayList<SwiftExpression>();
 	public final ArrayList<SwiftFunction> instanceFunctions = new ArrayList<SwiftFunction>();
 }

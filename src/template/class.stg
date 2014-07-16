@@ -3,9 +3,11 @@ import "type.stg"
 import "util.stg"
 import "methods.stg"
 
-extends(parent) ::= "<if(parent)>extends <parent> <endif>"
+extends(parent) ::= "<if(parent)>extends <type(parent)> <endif>"
 
-impl(protocols) ::= "<if(protocols)>implements <explode(protocols)> <endif>"
+explode_protocols(list) ::= "<type(first(list))><if(rest(list))><rest(list):{item|, <type(item)>}><endif>"
+
+impl(protocols) ::= "<if(protocols)>implements <explode_protocols(protocols)> <endif>"
 
 
 static_state(variables) ::= <<
@@ -17,16 +19,22 @@ static_behaviour(methods) ::= <<
 
 
 instance_state(variables) ::= <<
+	<if(variables)><variables: {variable | private <type(variable.type)> <variable.name>;
+	}><endif>
 >>
 
 instance_behaviour(methods) ::= <<
 <if(methods)><methods:instance_method()><endif>
 >>
 
+package() ::= "package com.arctouch.generated;"
+
 class(class) ::= <<
+<package()>
 <includes()>
 
 public class <class.name> <extends(class.parent)><impl(class.protocols)>{
+<instance_state(class.instanceState)>
 <instance_behaviour(class.instanceFunctions)>
 }
 >>
