@@ -19,7 +19,7 @@ static_behaviour(methods) ::= <<
 
 
 instance_state(variables) ::= <<
-	<if(variables)><variables: {variable | private <type(variable.type)> <variable.name>;
+	<if(variables)><variables: {variable | public <variable>;
 	}><endif>
 >>
 

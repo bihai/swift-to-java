@@ -1,0 +1,12 @@
+statements(statements) ::= <<
+	<statements: {statement |  <statement>;
+	}>
+>>
+
+
+for(for) ::= <<
+
+for (<for.init>;<for.condition>;<for.increment>) {
+	<statements(for.statements)>
+}
+>>

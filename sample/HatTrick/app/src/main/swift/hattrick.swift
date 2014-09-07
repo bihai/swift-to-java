@@ -1,135 +1,188 @@
-class HatTrick : Activity, OnClickListener {
-    var acc : Int
-    var clear : Bool
-    var label : EditText
- 
-    override func onCreate(savedState: Bundle) {
-        super.onCreate(savedState)
-        
-        var uberroot: LinearLayout
-        uberroot = LinearLayout(context: self)
-        uberroot.setOrientation(VERTICAL)
-        label = EditText(context: self)
-        
-        uberroot.addView(label)
-        
-        var root:LinearLayout
-        root = LinearLayout(context: self)
+//
+//  HatTrickViewController.swift
+//  ArctouchTK
+//
+//  Created by Felipe Homma on 8/12/14.
+//  Copyright (c) 2014 Arctouch. All rights reserved.
+//
 
-        var button:Button
 
-        var left: LinearLayout
-        left = LinearLayout(context: self)
-        left.setOrientation(VERTICAL)
+// change compiler to accept this //> thing
+//>@package("com.arctouch.test")
 
-        button = Button(context: self)
-        button.setText("7")
-        button.setOnClickListener(self)
-        left.addView(button);
-        button = Button(context: self)
-        button.setText("4")
-        button.setOnClickListener(self)
-        left.addView(button);
-        button = Button(context: self)
-        button.setText("1")
-        button.setOnClickListener(self)
-        left.addView(button)
-        button = Button(context: self)
-        button.setText("0")
-        button.setOnClickListener(self)
-        left.addView(button)
 
-        var center: LinearLayout
-        center = LinearLayout(context: self)
-        center.setOrientation(VERTICAL)
-        
-        button = Button(context: self)
-        button.setText("8")
-        button.setOnClickListener(self)
-        center.addView(button);
-        button = Button(context: self)
-        button.setText("5")
-        button.setOnClickListener(self)
-        center.addView(button);
-        button = Button(context: self)
-        button.setText("2")
-        button.setOnClickListener(self)
-        center.addView(button);
-        button = Button(context: self)
-        button.setText("+")
-        button.setOnClickListener(self)
-        center.addView(button)
-        
-        var right: LinearLayout
-        right = LinearLayout(context: self)
-        right.setOrientation(VERTICAL)
-        
-        button = Button(context: self)
-        button.setText("9")
-        button.setOnClickListener(self)
-        right.addView(button)
-        button = Button(context: self)
-        button.setText("6")
-        button.setOnClickListener(self)
-        right.addView(button);
-        button = Button(context: self)
-        button.setText("3")
-        button.setOnClickListener(self)
-        right.addView(button);
-        button = Button(context: self)
-        button.setText("=")
-        button.setOnClickListener(self)
-        right.addView(button)
-        
-        
-        root.addView(left)
-        root.addView(center)
-        root.addView(right)
-        uberroot.addView(root)
 
-        self.setContentView(uberroot)
+class CalculatorState {
+    let None:Int = 0
+    let Sum:Int = 1
+    let Sub:Int = 2
+    
+    var acc : Int = 0
+    var newValue : Int = 0
+    var op: Int = 0
+    
+    func addDigit(digit: Int) {
+        newValue = newValue * 10 + digit
     }
     
-    func onClick(view: View) {
-        var button : Button
-        button = view as Button
-
-        var text : String
-        text = button.getText().toString();
-        
-        var isEquals : Bool
-        isEquals = text.equals("=")
-        var isPlus : Bool
-        isPlus = text.equals("+")
-        var label: EditText
-        label = self.label
-        
-        if isEquals || isPlus {
-            var editable : Editable
-            editable = label.getText()
-            
-            var ltext: String
-            ltext = editable.toString()
-            var rvalue : Int
-            rvalue = ltext as Int
-            
-            
-            acc = acc + rvalue
-            ltext = acc as String
-            
-            label.setText(ltext)
-            clear = true;
-            if isEquals {
-                acc = 0
-            }
+    func doOperation() {
+        if op == Sum {
+            acc += newValue
+        } else if op == Sub {
+            acc -= newValue
         } else {
-            if clear {
-                label.setText(text)
-                clear = false;
-            } else {
-                label.append(text)
-            }
-            
+            acc = newValue
         }
+        newValue = 0;
+    }
+}
+
+class DigitListener: ATKClickListener {
+    var calculator: CalculatorState?
+    var output: ATKLabel?
+
+    override func onClick(view: ATKView) {
+        var button : ATKButton = view as ATKButton
+        
+        var text : String = button.getText()
+        var digit : Int = StringToInt(text)
+        calculator!.addDigit(digit)
+        output!.setText(String(calculator!.newValue))
+    }
+}
+
+
+class SumListener : ATKClickListener {
+    var calculator: CalculatorState?
+    var output: ATKLabel?
+    override func onClick(view: ATKView) {
+        calculator!.doOperation()
+        calculator!.op = calculator!.Sum
+        output!.setText(String(calculator!.acc))
+    }
+}
+
+class SubListener : ATKClickListener {
+    var calculator: CalculatorState?
+    var output: ATKLabel?
+    override func onClick(view: ATKView) {
+        calculator!.doOperation()
+        calculator!.op = calculator!.Sub
+        output!.setText(String(calculator!.acc))
+    }
+}
+
+class ResultListener : ATKClickListener {
+    var calculator: CalculatorState?
+    var output: ATKLabel?
+    override func onClick(view: ATKView) {
+        calculator!.doOperation()
+        output!.setText(String(calculator!.acc))
+        calculator!.acc = 0
+    }
+}
+
+class HatTrick: ATKApplication {
+    let calculator : CalculatorState = CalculatorState()
+    var digitListener : DigitListener = DigitListener()
+    var sumListener : SumListener = SumListener()
+    var subListener : SubListener = SubListener()
+    var resultListener : ResultListener = ResultListener()
+    
+    override func main(rootView: ATKViewContainer) {
+        
+        
+        let frame:ATKRectangle = rootView.getFrame()
+        var label : ATKLabel = self.createDisplay(20, height:60, canvasRect:frame)
+        self.createDigits(20, buttonSize: 60, canvasRect:frame)
+        self.createOperations(20, buttonSize: 60, canvasRect:frame)
+        
+        digitListener.calculator = calculator
+        digitListener.output = label
+
+        sumListener.calculator = calculator
+        sumListener.output = label
+
+        subListener.calculator = calculator
+        subListener.output = label
+
+        resultListener.calculator = calculator
+        resultListener.output = label
+    }
+    
+    func createDisplay(marginOffset: Int, height: Int, canvasRect:ATKRectangle) -> ATKLabel {
+        var label : ATKLabel = ATKLabel()
+        label.setText("0")
+        label.setFrame(ATKRectangle(x:marginOffset, y: marginOffset, width:canvasRect.width - 2 * marginOffset, height:height))
+        
+        
+        rootView.addChildView(label)
+        return label
+    }
+    
+    func createOperations(marginOffset: Int, buttonSize: Int, canvasRect:ATKRectangle) {
+        let gap : Int = 1
+        let buttonGap : Int = buttonSize + gap
+
+        var topOffset: Int = canvasRect.height - marginOffset - 3 * buttonGap - buttonSize
+        let rightOffset: Int = canvasRect.width - marginOffset - buttonSize
+        var rect :ATKRectangle = ATKRectangle(x:rightOffset, y: 0, width:buttonSize, height:buttonSize)
+
+        var sum : ATKButton = ATKButton()
+        rect.y = topOffset
+        sum.setFrame(rect)
+        sum.onClickListener = sumListener
+        sum.setText("+");
+        rootView.addChildView(sum)
+
+        topOffset += buttonGap
+        var sub : ATKButton = ATKButton()
+        rect.y = topOffset
+        sub.setFrame(rect)
+        sub.onClickListener = subListener
+        sub.setText("-");
+        rootView.addChildView(sub)
+
+        topOffset += 2*buttonGap
+        var enter : ATKButton = ATKButton()
+        rect.y = topOffset
+        enter.setFrame(rect)
+        enter.onClickListener = resultListener
+        enter.setText("=");
+        rootView.addChildView(enter)
+    }
+    
+    func createDigits(marginOffset: Int, buttonSize: Int, canvasRect:ATKRectangle) {
+        let gap : Int = 1
+        let buttonGap : Int = buttonSize + gap
+        
+        let topOffset: Int = canvasRect.height - marginOffset - 3 * buttonGap - buttonSize
+        var rect :ATKRectangle = ATKRectangle(x:0, y: 0, width:buttonSize, height:buttonSize)
+        var btn : ATKButton
+        
+        for var i:Int=1;i < 10; i+=1 {
+            btn = ATKButton()
+            btn.setText(String(i))
+            let pos:Int = 9 - i;
+            let col: Int = pos % 3;
+            let row: Int = pos / 3;
+            
+            rect.x = marginOffset + 2 * buttonGap - col * buttonGap
+            rect.y = topOffset + row * buttonGap
+            btn.setFrame(rect)
+            btn.onClickListener = digitListener
+            
+            rootView.addChildView(btn)
+        }
+        
+        btn = ATKButton()
+        btn.setText("0")
+        rect.x = marginOffset
+        rect.y = topOffset + 3 * buttonGap
+        rect.width = 2 * buttonGap + buttonSize
+        btn.setFrame(rect)
+        btn.onClickListener = digitListener
+        
+        rootView.addChildView(btn)
     }
 }

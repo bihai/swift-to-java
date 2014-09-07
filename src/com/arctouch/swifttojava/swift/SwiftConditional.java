@@ -2,6 +2,10 @@ package com.arctouch.swifttojava.swift;
 
 import java.util.ArrayList;
 
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupFile;
+
 public class SwiftConditional implements SwiftExpression {
 	public SwiftExpression condition;
 	public final ArrayList<SwiftExpression> ifTrue = new ArrayList<SwiftExpression>();
@@ -9,6 +13,7 @@ public class SwiftConditional implements SwiftExpression {
 	
 	@Override
 	public String toString() {
+		/*
 		StringBuilder statement = new StringBuilder();
 		
 		statement.append("if (");
@@ -29,5 +34,12 @@ public class SwiftConditional implements SwiftExpression {
 		}
 		statement.append("}\n");
 		return statement.toString();
+		*/
+		
+		STGroup group = new STGroupFile("template/if.stg");
+		ST st = group.getInstanceOf("ifStatement");
+		st.add("ifData", this);
+		return st.render();
+
 	}
 }

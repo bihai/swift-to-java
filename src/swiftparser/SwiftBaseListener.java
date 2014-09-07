@@ -1,5 +1,5 @@
-package swiftparser;
 // Generated from Swift.g4 by ANTLR 4.3
+package swiftparser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;

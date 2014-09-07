@@ -13,10 +13,13 @@ public class SwiftConstructor implements SwiftExpression {
 		builder.append(constructor.toString());
 		builder.append(" (");
 		
-		for (int i = 0; i < parameters.size(); ++i) {
-			builder.append(parameters.get(i).toString());
+		if (parameters.size() > 0) {
+			builder.append(parameters.get(0).toString());
+			for (int i = 1; i < parameters.size(); ++i) {
+				builder.append(", ");
+				builder.append(parameters.get(i).toString());
+			}
 		}
-		
 		builder.append(")");
 		
 		return builder.toString();

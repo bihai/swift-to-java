@@ -1,0 +1,13 @@
+statements(s) ::= <<
+	<s: {statement |  <statement>;
+	}>
+>>
+
+
+ifStatement(ifData) ::= <<
+if (<ifData.condition>) {
+	<statements(ifData.ifTrue)>
+}<if(ifData.ifNot)> else {
+	<statements(ifData.ifNot)>
+}<endif>
+>>

@@ -8,7 +8,7 @@ public class SwiftVariableDeclaration implements SwiftExpression {
 	@Override
 	public String toString() {
 		
-		String varDeclaration = mutable? "final " : "";
+		String varDeclaration = !mutable? "final " : "";
 		return varDeclaration + type + " " + name;
 	}
 }

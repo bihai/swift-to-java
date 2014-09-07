@@ -1,4 +1,8 @@
+/Swift.tokens
+/SwiftLexer.tokens
 /com
+/resources
 /swiftparser
 /template
-/resources
+/Swift.g4
+/grammar
